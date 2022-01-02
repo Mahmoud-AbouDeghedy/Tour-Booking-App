@@ -16,9 +16,11 @@ export const displayMap = locations => {
   const bounds = new mapboxgl.LngLatBounds();
 
   locations.forEach(loc => {
+    // Create marker
     const el = document.createElement('div');
     el.className = 'marker';
 
+    // Add marker
     new mapboxgl.Marker({
       element: el,
       anchor: 'bottom'
@@ -26,11 +28,13 @@ export const displayMap = locations => {
       .setLngLat(loc.coordinates)
       .addTo(map);
 
+    // Add popup
     new mapboxgl.Popup({ offset: 30 })
       .setLngLat(loc.coordinates)
       .setHTML(`<p>Day ${loc.day}: ${loc.description}</p>`)
       .addTo(map);
 
+    // Extend map bounds to include current location
     bounds.extend(loc.coordinates);
   });
 

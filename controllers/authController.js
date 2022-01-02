@@ -21,9 +21,10 @@ const createSendToken = (user, statusCode, req, res) => {
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
-    secure: req.secure || req.headers('x-forwarded-proto') === 'https'
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
   });
 
+  // Remove password from output response
   user.password = undefined;
 
   res.status(statusCode).json({
@@ -36,8 +37,12 @@ const createSendToken = (user, statusCode, req, res) => {
 };
 
 exports.signUp = catchAsync(async (req, res, next) => {
-  // const newUser = await User.create(req.body);
-  const newUser = await User.create(req.body);
+  const newUser = await User.create({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm
+  });
 
   const url = `${req.protocol}://${req.get('host')}/me`;
   // console.log(url);
@@ -101,6 +106,7 @@ exports.protect = catchAsync(async (req, res, next) => {
       new AppError('User recently changed password!! Please log in again.', 401)
     );
   }
+
   req.user = currentUser;
   res.locals.user = currentUser;
   next();
@@ -166,7 +172,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      message: 'Token sent to email!'
+      message: 'Reset token sent to email!'
     });
   } catch (err) {
     user.passwordResetToken = undefined;
@@ -175,7 +181,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     return next(
       new AppError(
-        'there was an error sending the email. Try again later!',
+        'There was an error sending the email. Try again later!',
         500
       )
     );
@@ -209,7 +215,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
 
   if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
-    return next(new AppError('Your current password s wrong!', 401));
+    return next(new AppError('Your current password is wrong!', 401));
   }
 
   user.password = req.body.password;

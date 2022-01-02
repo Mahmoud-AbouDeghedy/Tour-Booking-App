@@ -5,7 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 exports.alerts = (req, res, next) => {
-  const { alert } = req.alert;
+  const { alert } = req.query;
   if (alert === 'booking')
     res.locals.alert =
       "Your booking was successful! Please check your email for a confirmation. If your booking doesn't show up here immediately, please come back later.";
@@ -13,14 +13,12 @@ exports.alerts = (req, res, next) => {
 };
 
 exports.getOverview = catchAsync(async (req, res, next) => {
-  //Get tour data from the collection
   const tours = await Tour.find();
 
   res.status(200).render('overview', { title: 'All Tours', tours });
 });
 
 exports.getTour = catchAsync(async (req, res, next) => {
-  //Get the data for the requested tour (including reviews and guides)
   const tour = await Tour.findOne({ slug: req.params.slug }).populate({
     path: 'reviews',
     fields: 'review rating user'

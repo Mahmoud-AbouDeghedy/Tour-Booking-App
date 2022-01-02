@@ -3,22 +3,6 @@
 //   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 // );
 
-// exports.checkBody = (req, res, next) => {
-//   if (!('name' in req.body) || !('price' in req.body)) {
-//     return res
-//       .status(404)
-//       .json({ status: 'bad request', message: 'no price or name' });
-//   }
-//   next();
-// };
-
-// exports.checkID = (req, res, next, val) => {
-//   if (req.params.id > tours.length) {
-//     return res.status(404).json({ status: 'fail', message: 'invalid ID' });
-//   }
-//   console.log(`tour id is ${val}`);
-//   next();
-// };
 const multer = require('multer');
 const sharp = require('sharp');
 
@@ -43,6 +27,8 @@ exports.uploadTourImages = upload.fields([
   { name: 'imageCover', maxCount: 1 },
   { name: 'images', maxCount: 3 }
 ]);
+// upload.single('image') req.file
+// upload.array('images', 5) req.files
 
 exports.resizeTourImages = catchAsync(async (req, res, next) => {
   if (!req.files.imageCover && !req.files.images) return next();
@@ -88,58 +74,10 @@ exports.getSpecificTour = factory.getOne(Tour, {
 });
 
 exports.createTour = factory.createOne(Tour);
-// console.log(req.body);
-// res.send('done');
-// const id = tours[tours.length - 1].id + 1;
-// const newTour = Object.assign({ id }, req.body);
-
-// tours.push(newTour);
-// fs.writeFile(
-//   `${__dirname}/dev-data/data/tours-simple.json`,
-//   JSON.stringify(tours),
-//   (err) => {
-//     res.status(201).json({
-//       status: 'success',
-//       data: {
-//         tour: newTour,
-//       },
-//       me: 'deghedy',
-//     });
-//   }
-// );
-//   try {
-//     const newTour = await Tour.create(req.body);
-
-//     res.status(201).json({
-//       status: 'success',
-//       data: {
-//         tour: newTour,
-//       },
-//       me: 'deghedy',
-//     });
-//   } catch (err) {
-//     res.status(404).json({ status: 'fail', message: err });
-//   }
-// });
 
 exports.updateTour = factory.updateOne(Tour);
 
 exports.deleteTour = factory.deleteOne(Tour);
-
-// exports.deleteTour = catchAsync(async (req, res, next) => {
-//   const { id } = req.params;
-//   // await Tour.deleteOne({ _id: id.toString() });
-//   const tour = await Tour.findByIdAndDelete(id);
-
-//   if (!tour) {
-//     return next(new AppError('No tour found with this ID', 404));
-//   }
-
-//   res.status(204).json({
-//     status: 'success',
-//     data: null
-//   });
-// });
 
 exports.getTourStats = catchAsync(async (req, res, next) => {
   const stats = await Tour.aggregate([

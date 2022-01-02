@@ -2,8 +2,6 @@ const mongoose = require('mongoose');
 const slugify = require('slugify');
 // const validator = require('validator');
 
-// const User = require('./userModel');
-
 const tourSchema = new mongoose.Schema(
   {
     name: {
@@ -12,8 +10,8 @@ const tourSchema = new mongoose.Schema(
       unique: true,
       trim: true,
       maxlength: [40, "A tour-name can't exceed 40 characters"],
-      minlength: [10, 'A tour name must be at least 10 characters']
-      // validate: [validator.isAlpha, 'Name must contain only chars'],
+      minlength: [10, 'A tour-name must be at least 10 characters']
+      // validate: [validator.isAlpha, 'Name must contain only characters'],
     },
     slug: String,
     duration: {
@@ -29,7 +27,7 @@ const tourSchema = new mongoose.Schema(
       required: [true, 'A tour must have a difficulty'],
       enum: {
         values: ['easy', 'medium', 'difficult'],
-        message: 'the difficulty must be either: easy ,medium or difficult'
+        message: 'The difficulty must be either: easy, medium, or difficult'
       }
     },
     ratingsAverage: {
@@ -37,7 +35,7 @@ const tourSchema = new mongoose.Schema(
       default: 3.5,
       min: [1, 'Rating must be between 1-5'],
       max: [5, 'Rating must be between 1.0:5.0'],
-      set: val => Math.round(val * 10) / 10
+      set: val => Math.round(val * 10) / 10 // 4.666666, 46.6666, 47, 4.7
     },
     ratingsQuantity: {
       type: Number,
@@ -51,16 +49,16 @@ const tourSchema = new mongoose.Schema(
       type: Number,
       validate: {
         validator: function(val) {
-          //works only with creating new docs not updating
+          //works only with creating new docs not updating, this points to current doc
           return val < this.price;
         },
-        message: 'The discount ({VALUE }) must be lower than the price'
+        message: 'The discount ({VALUE}) must be lower than the price'
       }
     },
     summary: {
       type: String,
       trim: true,
-      required: [true, 'A tour must have a summary']
+      required: [true, 'A tour must have a description summary']
     },
     description: {
       type: String,
@@ -82,6 +80,7 @@ const tourSchema = new mongoose.Schema(
       default: false
     },
     startLocation: {
+      // GeoJSON
       type: {
         type: String,
         default: 'Point',
@@ -120,6 +119,7 @@ tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
 });
 
+// Virtual populate
 tourSchema.virtual('reviews', {
   ref: 'Review',
   foreignField: 'tour',
@@ -166,12 +166,12 @@ tourSchema.pre(/^find/, function(next) {
   next();
 });
 
-tourSchema.post(/^find/, function(docs, next) {
-  // console.log(`Query took ${Date.now() - this.start} milliseconds`);
-  next();
-});
+// tourSchema.post(/^find/, function(docs, next) {
+//   console.log(`Query took ${Date.now() - this.start} milliseconds`);
+//   next();
+// });
 
-//Aggregation middleware
+//Aggregation middleware: this points to the current aggregation object
 // tourSchema.pre('aggregate', function(next) {
 //   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
 //   console.log(this.pipeline());

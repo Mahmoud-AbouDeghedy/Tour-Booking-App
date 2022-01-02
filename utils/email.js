@@ -12,6 +12,7 @@ module.exports = class Email {
 
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
+      // Sendgrid
       return nodemailer.createTransport({
         service: 'SendGrid',
         auth: {
@@ -31,6 +32,7 @@ module.exports = class Email {
     });
   }
 
+  // Send the actual email
   async send(template, subject) {
     const html = pug.renderFile(
       `${__dirname}/../views/emails/${template}.pug`,
@@ -42,9 +44,10 @@ module.exports = class Email {
       to: this.to,
       subject,
       html,
-      text: htmlToText.fromString(html)
+      text: htmlToText.convert(`${html}`)
     };
 
+    // Create a transport and send email
     await this.newTransport().sendMail(mailOptions);
   }
 

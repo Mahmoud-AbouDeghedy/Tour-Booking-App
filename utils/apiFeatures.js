@@ -27,6 +27,7 @@ class APIFeatures {
     } else {
       this.query = this.query.sort('-createdAt');
     }
+
     return this;
   }
 
@@ -38,6 +39,7 @@ class APIFeatures {
     } else {
       this.query.select('-__v');
     }
+
     return this;
   }
 
