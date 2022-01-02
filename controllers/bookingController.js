@@ -1,4 +1,3 @@
-const fs = require('fs');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
@@ -69,11 +68,10 @@ exports.webhookCheckout = (req, res, next) => {
     return res.status(400).send(`Webhook error: ${err.message}`);
   }
 
-  if (event.type === 'checkout.session.completed') {
-    fs.writeFileSync('./output.txt', JSON.stringify(event.data.object));
-    // createBookingCheckout(event.data.object);
-  }
-  res.status(200).json({ received: true });
+  if (event.type === 'checkout.session.completed')
+    createBookingCheckout(event.data.object);
+
+  res.status(200).json({ received: true, data: event.data.object });
 };
 
 exports.createBooking = factory.createOne(Booking);
