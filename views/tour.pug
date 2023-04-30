@@ -1,35 +1,36 @@
 extends base
+
 include _reviewCard
 
 block append head
-  script(src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js')
-  link(href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet')
+  script(src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js' crossorigin="anonymous")
+  link(href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' crossorigin="anonymous")
 
-mixin overviewBox(description,text,icon)
+mixin overviewBox(label,text,icon)
   .overview-box__detail
     svg.overview-box__icon
       use(xlink:href=`/img/icons.svg#icon-${icon}`)
-    span.overview-box__label= description
+    span.overview-box__label= label
     span.overview-box__text= text
 
-block content 
+block content
   section.section-header
     .header__hero
       .header__hero-overlay &nbsp;
-      img.header__hero-img(src=`/img/tours/${tour.imageCover}`, alt=`${tour.name}`)
+      img.header__hero-img(src=`/img/tours/${tour.imageCover}`, alt=`${tour.name} tour`)
 
     .heading-box
       h1.heading-primary
-        span= `${tour.name} tour`
+        span #{tour.name} tour
       .heading-box__group
         .heading-box__detail
           svg.heading-box__icon
             use(xlink:href='/img/icons.svg#icon-clock')
-          span.heading-box__text= `${tour.duration} days`
+          span.heading-box__text #{tour.duration} days
         .heading-box__detail
           svg.heading-box__icon
             use(xlink:href='/img/icons.svg#icon-map-pin')
-          span.heading-box__text= tour.startLocation.description
+          span.heading-box__text #{tour.startLocation.description}
 
   section.section-description
     .overview-box
@@ -37,7 +38,9 @@ block content
         .overview-box__group
           h2.heading-secondary.ma-bt-lg Quick facts
 
-          +overviewBox('Next Date',tour.startDates[0].toLocaleString('en-us', {month:'long',year:'numeric'}),'calendar')
+          -const date=tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
+
+          +overviewBox('Next date',date,'calendar')
           +overviewBox('Difficulty',tour.difficulty,'trending-up')
           +overviewBox('Participants',`${tour.maxGroupSize} people`,'user')
           +overviewBox('Rating',`${tour.ratingsAverage} / 5`,'star')
@@ -48,29 +51,24 @@ block content
           each guide in tour.guides
             .overview-box__detail
               img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
-
-              - if(guide.role === 'lead-guide')
-                span.overview-box__label Lead guide
-              - if(guide.role === 'guide')
-                span.overview-box__label Tour guide
-              span.overview-box__text= guide.name
+              -const role=guide.role==='lead-guide' ? 'Lead guide' : 'Tour Guide'
+              span.overview-box__label #{role}
+              span.overview-box__text #{guide.name}
 
     .description-box
-      h2.heading-secondary.ma-bt-lg= `About ${tour.name} tour`
-      - const paragraphs = tour.description.split('\n')
-      each p in paragraphs
-        p.description__text= p
-
+      h2.heading-secondary.ma-bt-lg About the #{tour.name} tour
+      -const descriptions=tour.description.split('\n')
+      each description in descriptions
+        p.description__text #{description}
 
   section.section-pictures
-    each img, i in tour.images
+    each picture, i in tour.images
       .picture-box
-        img.picture-box__img(src=`/img/tours/${img}`, alt=`${tour.name} ${i + 1}` , class=`picture-box__img--${i + 1}`)
-
+        img.picture-box__img(src=`/img/tours/${picture}`, alt=`${tour.name} Tour ${i+1}` class=`picture-box__img--${i+1}`)
 
   section.section-map
     #map(data-locations=`${JSON.stringify(tour.locations)}`)
-
+    
   section.section-reviews
     .reviews
       each review in tour.reviews
@@ -84,9 +82,12 @@ block content
       img.cta__img.cta__img--2(src=`/img/tours/${tour.images[2]}`, alt='Tour picture')
       .cta__content
         h2.heading-secondary What are you waiting for?
-        p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
-
+        p.cta__text #{tour.duration} days. 1 adventure. Infinite memories. Make it yours today!
+        
         if user
           button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
         else
-          a.btn.btn--green.span-all-rows(href='/login') Log in to book tour
+          a.btn.btn--green.span-all-rows(href='/login') Log in to book tour now!
+        
+    
+

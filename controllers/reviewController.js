@@ -1,20 +1,15 @@
 const Review = require('../models/reviewModel');
-const factory = require('./handlerFactory');
+const handlerFactory = require('./handlerFactory');
 
 exports.setTourUserIds = (req, res, next) => {
-  // Allow nested routes
   if (!req.body.tour) req.body.tour = req.params.tourId;
   if (!req.body.user) req.body.user = req.user.id;
 
   next();
 };
 
-exports.getAllreviews = factory.getAll(Review);
-
-exports.getReview = factory.getOne(Review);
-
-exports.createReview = factory.createOne(Review);
-
-exports.updateReview = factory.updateOne(Review);
-
-exports.deleteReview = factory.deleteOne(Review);
+exports.getAllReviews = handlerFactory.getAll(Review);
+exports.createReview = handlerFactory.createOne(Review);
+exports.deleteReview = handlerFactory.deleteOne(Review);
+exports.updateReview = handlerFactory.updateOne(Review);
+exports.getReview = handlerFactory.getOne(Review);
