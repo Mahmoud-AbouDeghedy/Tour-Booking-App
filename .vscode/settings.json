@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   // "files.autoSave": "onFocusChange",
   "editor.formatOnSave": true,
@@ -15,4 +16,23 @@
   },
   "files.eol": "\n"
 
+=======
+{
+  // "files.autoSave": "onFocusChange",
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": true,
+  "workbench.statusBar.visible": true,
+  "workbench.activityBar.visible": true,
+  "editor.wordWrap": "on",
+  "editor.trimAutoWhitespace": false,
+  "eslint.run": "onSave",
+
+  "workbench.colorCustomizations": {
+    "statusBar.background": "#333333",
+    "statusBar.noFolderBackground": "#333333",
+    "statusBar.debuggingBackground": "#263238"
+  },
+  "files.eol": "\n"
+
+>>>>>>> da0550c4307d586d4cbde213272eecfeaf944e13
 }
