@@ -1,40 +1,33 @@
-/*eslint-disable*/
+/* eslint-disable */
 
-export const displayMap = locations => {
+export const displayMap = (locations) => {
   mapboxgl.accessToken =
-    'pk.eyJ1IjoiZGVnaGVkeSIsImEiOiJja3hhYWVic3ozaDk1MnFwejVxNm9qOXprIn0.gnk1a4lyRVsdMvL8qiR9YQ';
+    'pk.eyJ1IjoiZGVnaGVkeSIsImEiOiJjbGd3eHlvcWgwZGxnM2pvMDhobHljbnh2In0.WGiLOvd9ZpWTckxotQkacA';
 
   var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/deghedy/ckxaav0xt2u9515p8tihpyraw',
-    scrollZoom: false
-    // center: [-118.113491, 34.111745],
-    // zoom: 10
-    // interactive: false
+    scrollZoom: false,
   });
 
   const bounds = new mapboxgl.LngLatBounds();
 
-  locations.forEach(loc => {
-    // Create marker
+  locations.forEach((loc) => {
     const el = document.createElement('div');
     el.className = 'marker';
 
-    // Add marker
     new mapboxgl.Marker({
       element: el,
-      anchor: 'bottom'
+      anchor: 'bottom',
     })
       .setLngLat(loc.coordinates)
       .addTo(map);
 
-    // Add popup
     new mapboxgl.Popup({ offset: 30 })
       .setLngLat(loc.coordinates)
       .setHTML(`<p>Day ${loc.day}: ${loc.description}</p>`)
       .addTo(map);
 
-    // Extend map bounds to include current location
     bounds.extend(loc.coordinates);
   });
 
@@ -43,7 +36,7 @@ export const displayMap = locations => {
       top: 200,
       bottom: 150,
       left: 100,
-      right: 100
-    }
+      right: 100,
+    },
   });
 };
