@@ -1,0 +1,7 @@
+{
+  "root": "docs/",
+  "clean_urls": false,
+  "routes": {
+    "/**": "index.html"
+  }
+}
