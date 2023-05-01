@@ -10,7 +10,6 @@ const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const cors = require('cors');
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
@@ -53,25 +52,11 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-app.post('/webhook-checkout', express.raw({ type: '*/*' }), (req, res) => {
-  const signature = req.headers['stripe-signature'];
-  console.log(req.headers);
-  let event;
-  try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
-
-  if (event.type === 'checkout.session.completed')
-    bookingController.createBookingCheckout(event.data.object);
-
-  res.status(200).json({ received: true });
-});
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: '*/*' }),
+  bookingController.webhookCheckout
+);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
