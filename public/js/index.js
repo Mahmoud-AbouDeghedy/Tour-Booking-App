@@ -5,7 +5,9 @@ import { login, logout } from './login.js';
 import { displayMap } from './mapbox.js';
 import { updateSettings } from './updateSettings.js';
 import { bookTour } from './stripe.js';
+import { showAlert } from './alert.js';
 
+const body = document.querySelector('body');
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const logoutBtn = document.querySelector('.nav__el--logout');
@@ -65,4 +67,8 @@ if (bookBtn) {
     const { tourId } = e.target.dataset;
     await bookTour(tourId);
   });
+}
+
+if (body.dataset.alert) {
+  showAlert('success', body.dataset.alert, 15000);
 }
