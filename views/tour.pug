@@ -50,7 +50,7 @@ block content
 
           each guide in tour.guides
             .overview-box__detail
-              img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
+              img.overview-box__img(src=`${guide.photo}`, alt=`${guide.name}` crossorigin="anonymous")
               -const role=guide.role==='lead-guide' ? 'Lead guide' : 'Tour Guide'
               span.overview-box__label #{role}
               span.overview-box__text #{guide.name}
