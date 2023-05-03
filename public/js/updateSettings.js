@@ -16,9 +16,10 @@ export const updateSettings = async (data, type) => {
         'success',
         `${type.charAt(0).toUpperCase() + type.slice(1)} updated successfully!`
       );
-      window.setTimeout(() => {
-        location.reload(true);
-      }, 1500);
+      // window.setTimeout(() => {
+      //   location.reload(true);
+      // }, 1500);
+      location.reload(true);
     } else {
       showAlert('error', res.data.message);
     }

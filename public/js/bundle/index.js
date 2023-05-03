@@ -11870,9 +11870,10 @@ const updateSettings = async (data, type)=>{
         });
         if (res.data.status === "success") {
             (0, _alertJs.showAlert)("success", `${type.charAt(0).toUpperCase() + type.slice(1)} updated successfully!`);
-            window.setTimeout(()=>{
-                location.reload(true);
-            }, 1500);
+            // window.setTimeout(() => {
+            //   location.reload(true);
+            // }, 1500);
+            location.reload(true);
         } else (0, _alertJs.showAlert)("error", res.data.message);
     } catch (err) {
         (0, _alertJs.showAlert)("error", err.response.data.message);
