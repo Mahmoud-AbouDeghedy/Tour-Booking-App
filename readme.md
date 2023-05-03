@@ -1,6 +1,6 @@
 # Natours
 
-This is a backend project for a fictional tour booking company called Natours.
+This is a full-stack project for a fictional tour booking company called Natours.
 
 ## Getting Started
 
