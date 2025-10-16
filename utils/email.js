@@ -23,7 +23,7 @@ module.exports = class Email {
       });
     }
     return nodemailer.createTransport(
-      new Transport({ apiKey: process.env.SENDINBLUE_API_KEY })
+      new Transport({ apiKey: process.env.BREVO_API_KEY })
     );
   }
 

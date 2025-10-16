@@ -36,7 +36,7 @@ app.options('*', cors());
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set security HTTP headers
+// Disable Content Security Policy, for Mapbox
 app.use(helmet({ contentSecurityPolicy: false }));
 
 // Development logging
@@ -84,12 +84,12 @@ app.use(
   })
 );
 
+// Compress responses
 app.use(compression());
 
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  // console.log(req.cookies);
   next();
 });
 

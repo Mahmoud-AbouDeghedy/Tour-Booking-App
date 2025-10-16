@@ -7,7 +7,7 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-dotenv.config({ path: './config.env' }); //& { $env:NODE_ENV = "development"; nodemon server.js }
+dotenv.config({ path: './config.env' });
 
 const app = require('./app');
 
